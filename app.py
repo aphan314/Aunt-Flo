@@ -1,6 +1,7 @@
 from flask import Flask, request
 from twilio.twiml.messaging_response import MessagingResponse
 import time
+import repeat
 import threading
 from twilio.rest import Client
 from keys import account_sid, auth_token, from_number, to_number
@@ -9,6 +10,9 @@ from keys import account_sid, auth_token, from_number, to_number
 app = Flask(__name__)
 current_time = None
 change_count = 0
+
+global timer
+timer = None
 
 @app.route('/sms', methods=['POST'])
 def sms():
@@ -28,40 +32,36 @@ def formulate_reply(message):
         answer = set_hour(message)
     #changes timer
     elif message == "c":
-        answer = set_change(message)
+        answer = set_change()
     #ends app
     elif message == "o":
         answer = set_period_over(message)
     # first text
     else:
-        answer = "\n Oh no :( How many hours?"
+        answer = "\n Oh no :( How many seconds?"
     return answer
 
 
 def _send_reminder():
+    global timer
+    del timer
     client = Client(account_sid, auth_token)
     message = client.messages.create(
         from_=from_number,
         body="PSA: Change your pad/tampon!!! Enter 'C' once you have changed it",
         to=to_number)
-    print(message.sid)
-
 
 def set_hour(message):
-    timer = threading.Timer(int(message), _send_reminder())
+    global timer
+    timer = repeat.RepeatingTimer(int(message), _send_reminder)
     timer.start()
     return "Reminder set for " + str(message) + " *seconds*"
 
-def set_emergency(message):
-    return "x"
-
-def set_change(message):
-
+def set_change():
     return "Kudos! You changed your pad/tampon! Timer reset."
 
 def set_period_over(message):
     return "okie yay!! u survived"
-
 
 
 if __name__ == '__main__':
