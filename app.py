@@ -1,8 +1,14 @@
 from flask import Flask, request
 from twilio.twiml.messaging_response import MessagingResponse
+import time
+import threading
+from twilio.rest import Client
+from keys import account_sid, auth_token
 
 
 app = Flask(__name__)
+current_time = None
+change_count = 0
 
 @app.route('/sms', methods=['POST'])
 def sms():
@@ -31,14 +37,30 @@ def formulate_reply(message):
         answer = "\n Oh no :( How many hours?"
     return answer
 
+def gfg():
+    print("gfg")
+    client = Client(account_sid, auth_token)
+    message = client.messages.create(
+        from_="+17148810022",
+        body="Hello! Change your pad/tampon!",
+        to="+14084665757")
+    print(message.sid)
+
+
 def set_hour(message):
-    return "set_hour to 5. Reply x if you want to set an emergency"
+    current_time = time.time()
+    print(current_time)
+    timer = threading.Timer(4.0, gfg)
+    timer.start()
+    return "Reminder set for " + str(message) + "(seconds)"
 
 def set_emergency(message):
     return "x"
 
 def set_change(message):
-    return "d"
+    change_time = time.time()
+    print(change_time)
+    return "You changed your pad/tampon!"
 
 def set_period_over(message):
     return "okie yay!! u survived"
