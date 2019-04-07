@@ -23,6 +23,10 @@ p2{
   font-family: 'VT323', monospace;
   }
 
+p3{
+  font-family: 'VT323', monospace;
+  }
+
 img {
   display: block;
   margin-left: auto;
@@ -31,13 +35,20 @@ img {
 body {
   background-image: url("gradient.png");
 }
-[class*="col-"] {
-  float: left;
-  padding: 15px;
+#parent {
+  display: flex;
 }
-.steps {width: 75%;}
-.demo {width: 25%;}
-
+#narrow {
+  width: 900px;
+}
+#wide {
+  flex: 1;
+}
+#facts {
+  margin: auto;
+  width: 60%;
+  padding: 10px;
+}
 </style>
 
 <title>aunt flo</title>
@@ -53,30 +64,38 @@ body {
 
 <h2><b><center><font size = "10">TOXIC SHOCK SYNDROME CAN BE FATAL<center></font></b></h2>
 <p2><b><center><font size = "6"> What is toxic shock syndrome (TSS)?</center></b></font>
-<p2><b><center><font size = "5">☠️</font><font size = "6">TSS is a bacterial infection caused by tampons or IUDs</font></center></b></p2>
-<p2><b><center><font size = "5">☠️</font><font size = "6">Leaving a tampon in for longer
-than 8-12 hours can increase risk of infection or TSS</font></center></b></p2>
-<p2><b><center><font size = "5">☠️</font><font size = "6">TSS causes a drastic drop in blood pressure, depriving organs of oxygen and possibly leading to death</font></center></b></p2>
-
-<h1 style = "color: #e22c5a;"><center><b><font size = "10">Aunt Flo can help!</font></center></b></h1>
-<p><font size = "5">Aunt Flo is a SMS chat-bot that reminds you to change your pad/tampon according to the number of hours you respond to her. Wearing a tampon or pad for too long can lead to bacterial infections which may potentially lead to toxic shock syndrome. With Aunt Flo, you are consistently notified to change out your feminine hygiene until your menstrual cycle is over. Not only are you practicing safe hygiene, you are also decreasing your chances of toxic shock syndrome.</p>
-
-<div class="steps">
-	<p1 style = "color: #e22c5a;">1) Say hello to Aunt Flo! Send her a text at <b>+1 (714) 881-0022</b><br> </style></p1>
-	<p1 style = "color: #e22c5a;">2) Let Aunt Flo know how often to remind you to change your sanitary products<br></style></p1>
-	<p1 style = "color: #e22c5a;">3) When the time comes, Aunt Flo will send you a message you remind you. Enter<b> "c"</b> once pad/tampon has been changed<br></style></p1>
-	<p1 style = "color: #e22c5a;">4) When your cycle is complete, send <b>"e"</b><br><br></style></p1>
+<div id="facts">
+  <p2><b><font size = "5">☠️</font><font size = "6">TSS is a bacterial infection caused by tampons or IUDs</font></b><br></p2>
+  <p2><b><font size = "5">☠️</font><font size = "6">Leaving a tampon in for longer
+  than 8-12 hours can increase risk of infection or TSS</font></b><br></p2>
+  <p2><b><font size = "5">☠️</font><font size = "6">TSS causes a drastic drop in blood pressure, depriving organs of oxygen and possibly leading to death</font></b><br></p2>
 </div>
 
+<h1 style = "color: #e22c5a;"><center><b><font size = "10">Aunt Flo can help!</font></center></b></h1>
+<p><font size = "6">Aunt Flo is a SMS chat-bot that reminds you to change your pad/tampon according to the number of hours you respond to her. Wearing a tampon or pad for too long can lead to bacterial infections which may potentially lead to toxic shock syndrome. With Aunt Flo, you are consistently notified to change out your feminine hygiene until your menstrual cycle is over. Not only are you practicing safe hygiene, you are also decreasing your chances of toxic shock syndrome.</p>
 
-<p2> Resources: </p2>
+<div id="parent">
+  <div id="narrow">
+  	<p3 style = "color: #e22c5a;"><font size = "7">1) Say hello to Aunt Flo! Send her a text at:</style></p3>
+    <p3 style = "color: #e22c5a;"><center> +1 (714) 881-0022 </center> </style></p3>
+  	<p3 style = "color: #e22c5a;">2) Let Aunt Flo know how often to remind you to change your sanitary products<br></style></p3>
+  	<p3 style = "color: #e22c5a;">3) Enter "C" when pad/tampon has been changed.<br></style></p3>
+  	<p3 style = "color: #e22c5a;">4) Enter "E" when your cycle is complete.</style></p3>
+  </div>
+
+  <div id="wide">
+    <img src="https://im.ezgif.com/tmp/ezgif-1-224dd43a2f7e.gif" alt="demo" width="200" height="400">
+  </div>
+</div>
+<div>
+<p2><font size = "5"> Resources: </p2>
 
 <ul>
   <li><a href="https://www.usatoday.com/story/news/nation-now/2017/06/03/what-if-leave-tampon-too-long/342305001/"><font size = "5">USA Today Article</a></li>
   <li><a href="https://www.webmd.com/women/guide/understanding-toxic-shock-syndrome-basics#1"><font size = "5">WebMD</a></li>
   <li><a href="https://my.clevelandclinic.org/health/diseases/15437-toxic-shock-syndrome"><font size = "5">Cleveland Clinic</a></li>
 </ul>
-
+</div>
 </body>
 
 
