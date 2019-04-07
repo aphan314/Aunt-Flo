@@ -2,13 +2,16 @@ from flask import Flask, request
 from twilio.twiml.messaging_response import MessagingResponse
 from twilio.rest import Client
 
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail, Email, Content
+import os
+
 import datetime
 import repeat
 from keys import account_sid, auth_token, from_number, to_number, SENDGRID_KEY, image
 
 
 app = Flask(__name__)
-current_time = None
 
 global count
 count = 0
@@ -32,7 +35,7 @@ def sms():
     response = MessagingResponse()
 
     reply = formulate_reply(message)
-    response.message(reply)
+    response.message("\n\n" + reply)
     return str(response)
 
 def formulate_reply(message):
@@ -56,8 +59,8 @@ def formulate_reply(message):
 
         global start_month
         start_month = now.month
-        answer = " \n Oh no :( Aunt Flo will remind you to change your pad/tampon. Don't ovary react!!! " \
-                 + "How many *seconds* would you like to set the reminder for?"
+        answer = "\n" + 'Oh no :( Aunt Flo will remind you to change your pad/tampon. Do not ovary react!!!' \
+                 + 'How many *seconds* would you like to set the reminder for?'
     return answer
 
 
@@ -67,7 +70,8 @@ def _send_reminder():
     client = Client(account_sid, auth_token)
     message = client.messages.create(
         from_=from_number,
-        body="\nPSA: Time to change your pad/tampon!!! Enter 'C' once you have changed it or enter 'E' if your period is over!",
+        body="PSA: Time to change your pad/tampon!!! " + "\n\n" +
+                    "Enter 'C' once you have changed it or enter 'E' if your period has ended!",
         to=to_number)
 
 def set_hour(message):
@@ -91,21 +95,44 @@ def _set_count():
 
 
 def set_period_over():
-    send_end_image()
-    now = datetime.datetime.now()
     global start_day
     global start_month
-    return "\nWoo!! You survived another cycle :) Your cycle on " \
+    now = datetime.datetime.now()
+    _send_end_image()
+    _send_email(start_day, start_month, now.day, now.month, count)
+    # global start_day
+    # global start_month
+    return "\nWoo!! You survived another cycle :) Your cycle started on " \
             + str(start_month) + "/" + str(start_day) + " and ended on " + str(now.month) + "/" + str(now.day) \
-            + ". You changed your pad/tampon " + str(count) + " times. <3 aunt flo"
+            + ". \nYou changed your pad/tampon " + str(count) + " times. Sent the data to your email! <3 aunt flo"
 
 
-def send_end_image():
+def _send_end_image():
     client = Client(account_sid, auth_token)
     message = client.messages.create(
         from_=from_number,
         media_url=image,
         to=to_number)
+
+
+def _send_email(start_d, start_m, now_d, now_m, c):
+    message = Mail(
+        from_email='helloitsauntflo@gmail.com',
+        to_emails='athenahacker2019@gmail.com',
+        subject='Data About Your Cycle! <3',
+        html_content='Hello sweetie!<br /> <br />Here is data about your cycle:<br /><br />' + 'Started on: ' + str(start_m)
+                + '/' + str(start_d) + '<br />Ended on: ' + str(now_m) + '/' + str(now_d)
+                + '<br />Number of times you changed your pad/tampon: ' + str(c) + '<br /><br />With Love, <br /> Aunt Flo'
+                + '<br /><br /><i>AthenaHacks 2019</i>')
+    try:
+        sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+        response = sg.send(message)
+        print(response.status_code)
+        print(response.body)
+        print(response.headers)
+    except Exception as e:
+        print(e.message)
+
 
 
 if __name__ == '__main__':
