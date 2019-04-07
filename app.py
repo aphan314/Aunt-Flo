@@ -14,6 +14,9 @@ change_count = 0
 global timer
 timer = None
 
+global reminder
+reminder = 0
+
 @app.route('/sms', methods=['POST'])
 def sms():
     message = request.form['Body']
@@ -52,12 +55,17 @@ def _send_reminder():
         to=to_number)
 
 def set_hour(message):
+    global reminder
+    reminder = int(message)
     global timer
-    timer = repeat.RepeatingTimer(int(message), _send_reminder)
+    timer = repeat.RepeatingTimer(reminder, _send_reminder)
     timer.start()
     return "Reminder set for " + str(message) + " *seconds*"
 
 def set_change():
+    global timer
+    timer = repeat.RepeatingTimer(reminder, _send_reminder)
+    timer.start()
     return "Kudos! You changed your pad/tampon! Timer reset."
 
 def set_period_over(message):
