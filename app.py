@@ -3,7 +3,7 @@ from twilio.twiml.messaging_response import MessagingResponse
 from twilio.rest import Client
 
 from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail, Email, Content
+from sendgrid.helpers.mail import Mail
 import os
 
 from random import randint
@@ -134,7 +134,7 @@ def _send_email(start_d, start_m, now_d, now_m, c):
                 + '<br />Number of times you changed your pad/tampon: ' + str(c) + '<br /><br />With Love, <br /> Aunt Flo'
                 + '<br /><br /><i>AthenaHacks 2019</i>')
     try:
-        sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+        sg = SendGridAPIClient(SENDGRID_KEY)
         response = sg.send(message)
         print(response.status_code)
         print(response.body)
