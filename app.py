@@ -6,6 +6,7 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail, Email, Content
 import os
 
+from random import randint
 import datetime
 import repeat
 from keys import account_sid, auth_token, from_number, to_number, SENDGRID_KEY, image
@@ -59,8 +60,8 @@ def formulate_reply(message):
 
         global start_month
         start_month = now.month
-        answer = "\n" + 'Oh no :( Aunt Flo will remind you to change your pad/tampon. Do not ovary react!!!' \
-                 + 'How many *seconds* would you like to set the reminder for?'
+        answer = "Oh no :( Aunt Flo will remind you to change your pad/tampon. Don't ovary react!!!" \
+                 + "\n\nHow many *seconds* would you like to set the reminder for?"
     return answer
 
 
@@ -80,18 +81,27 @@ def set_hour(message):
     global timer
     timer = repeat.RepeatingTimer(reminder, _send_reminder)
     timer.start()
-    return "\nOkay sweetie :) Reminder set for " + str(message) + " *seconds*"
+    return "Okay sweetie :) \n\nReminder set for " + str(message) + " *seconds*"
 
 def set_change():
     _set_count()
     global timer
     timer = repeat.RepeatingTimer(reminder, _send_reminder)
     timer.start()
-    return "\nGreat job! You changed your pad/tampon! Timer reset. See you in " + str(reminder) + " *seconds*!"
+    message = _get_message()
+    return message + "\n\nTimer reset. See you in " + str(reminder) + " *seconds*!"
 
 def _set_count():
     global count
     count += 1
+
+def _get_message():
+    messages = ["Great job! You changed your pad/tampon!",
+                "Amazing! Thanks for practicing good hygeine!",
+                "You're doing great sweetie! Your period will end!!",
+                "Keep up the good work! Let's keep changing your pad/tampon!",
+                "Yes! Goodbye bacterial infections and toxic shock syndrome!"]
+    return messages[randint(0, len(messages))]
 
 
 def set_period_over():
@@ -100,11 +110,10 @@ def set_period_over():
     now = datetime.datetime.now()
     _send_end_image()
     _send_email(start_day, start_month, now.day, now.month, count)
-    # global start_day
-    # global start_month
-    return "\nWoo!! You survived another cycle :) Your cycle started on " \
+
+    return "\nWoo!! You survived another cycle :) \n\nYour cycle started on " \
             + str(start_month) + "/" + str(start_day) + " and ended on " + str(now.month) + "/" + str(now.day) \
-            + ". \nYou changed your pad/tampon " + str(count) + " times. Sent the data to your email! <3 aunt flo"
+            + ". You changed your pad/tampon " + str(count) + " times. \n\nSent the data to your email! \n<3 aunt flo"
 
 
 def _send_end_image():
